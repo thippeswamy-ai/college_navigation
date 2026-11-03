@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getAdminDoc() {
+      return get(/databases/$(database)/documents/administrators/$(request.auth.uid)).data;
+    }
+
+    // Strictly check if the user is a Super Admin
+    function isSuperAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/administrators/$(request.auth.uid)) &&
+        getAdminDoc().role == 'superadmin' &&
+        getAdminDoc().status == 'active';
+    }
+
+    // 1. Departments collection
+    // PUBLIC: Anyone can search and read departments
+    // CONTROLS: Only Super Admin can create, edit, or delete departments
+    match /departments/{departmentId} {
+      allow read: if true;
+      allow create, update, delete: if isSuperAdmin();
+    }
+
+    // 2. Navigation Images collection
+    // PUBLIC: Anyone can view navigation images and voice instructions
+    // CONTROLS: Only Super Admin can upload, reorder, edit instructions, or delete navigation images
+    match /navigationImages/{imageId} {
+      allow read: if true;
+      allow create, update, delete: if isSuperAdmin();
+    }
+
+    // 3. College Information collection (Announcements, Events, Notices, About)
+    // PUBLIC: Anyone can read college information and announcements
+    // CONTROLS: Only Super Admin can publish, update, or delete posts
+    match /collegeInformation/{infoId} {
+      allow read: if true;
+      allow create, update, delete: if isSuperAdmin();
+    }
+
+    // 4. Administrators collection
+    // Read: Authenticated user reading own profile, or Super Admin reading all
+    // CONTROLS: Strictly Super Admin can create, modify, or delete accounts
+    match /administrators/{adminId} {
+      allow read: if isAuthenticated() && (request.auth.uid == adminId || isSuperAdmin());
+      allow create, update, delete: if isSuperAdmin();
+    }
+  }
+}

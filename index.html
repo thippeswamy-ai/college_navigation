@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Institute of Technology & Science - Smart Campus Navigation</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Application Stylesheets -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/navigation.css" />
+</head>
+<body>
+
+  <!-- Site Navigation Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand-wrapper">
+        <div class="brand-logo-badge">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="brand-text-col">
+          <span class="brand-title">Apex Institute of Technology</span>
+          <span class="brand-tagline">Autonomous • NAAC A++ Accredited</span>
+        </div>
+      </div>
+
+      <nav>
+        <ul class="nav-menu" id="headerNavMenu">
+          <li><a href="#home" class="nav-link active">Home</a></li>
+          <li><a href="#searchSection" class="nav-link">Search Campus</a></li>
+          <li><a href="#departments" class="nav-link">Departments</a></li>
+          <li><a href="#college-info" class="nav-link">College Info</a></li>
+          <li><a href="#announcements" class="nav-link">Notices & Events</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-action-group">
+        <a href="/login.html" class="btn-admin-portal" id="adminPortalLink">
+          <i class="fa-solid fa-lock"></i>
+          <span>Super Admin Controls</span>
+        </a>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section with Instant Search & Campus Navigation CTA -->
+  <section class="hero-section" id="home">
+    <div class="hero-container">
+      <div class="hero-pill">
+        <i class="fa-solid fa-earth-americas"></i>
+        <span>Public Campus Navigation • Management Controls Reserved for Super Admin</span>
+      </div>
+
+      <h1 class="hero-title">
+        Explore Apex Campus with <span class="highlight-blue">Turn-by-Turn Visuals</span> &amp; <span class="highlight-green">Voice Guidance</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Find any department, laboratory, lecture classroom, or administrative office with automated step-by-step images and natural voice directions.
+      </p>
+
+      <!-- Search Section -->
+      <div class="hero-search-wrapper" id="searchSection">
+        <div class="hero-search-input-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input 
+            type="text" 
+            id="campusSearchInput" 
+            class="hero-search-input" 
+            placeholder="Search departments, classrooms, labs (e.g. CSE, Room 204, AI Lab, Library)..." 
+            autocomplete="off"
+          />
+          <button class="clear-search-btn" id="clearSearchBtn" title="Clear Search">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <button class="hero-search-action-btn" id="triggerSearchBtn">
+            <span>Find Destination</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+        <div style="font-size: 0.775rem; color: var(--neutral-600); margin-top: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
+          <i class="fa-solid fa-circle-check text-emerald-600"></i>
+          <span>Anyone can search and navigate freely without login. Administrative controls require Super Admin access.</span>
+        </div>
+
+        <!-- Search Results Dropdown -->
+        <div class="search-results-container" id="searchResultsContainer">
+          <div class="search-results-header">
+            <span class="text-xs font-bold uppercase text-slate-500">Destination Filter:</span>
+            <div class="search-filters-bar">
+              <button class="search-filter-btn active" data-filter="all">All</button>
+              <button class="search-filter-btn" data-filter="department">Departments</button>
+              <button class="search-filter-btn" data-filter="lab">Laboratories</button>
+              <button class="search-filter-btn" data-filter="classroom">Classrooms</button>
+              <button class="search-filter-btn" data-filter="facility">Facilities</button>
+            </div>
+          </div>
+          <div class="search-results-list" id="searchResultsList">
+            <!-- Dynamic search results injected here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Search Chips -->
+      <div class="quick-search-chips">
+        <span class="quick-search-label">Popular Destinations:</span>
+        <button class="quick-search-chip" data-search="CSE">CSE Department</button>
+        <button class="quick-search-chip" data-search="Artificial Intelligence">AI &amp; Data Science</button>
+        <button class="quick-search-chip" data-search="Central Library">Central Library</button>
+        <button class="quick-search-chip" data-search="Botany">Botany Conservatory</button>
+        <button class="quick-search-chip" data-search="Zoology">Zoology Museum</button>
+        <button class="quick-search-chip" data-search="EDC">EDC Circuit Lab</button>
+      </div>
+
+      <!-- Quick Stats Row -->
+      <div class="hero-stats-row">
+        <div class="stat-card-mini">
+          <div class="stat-number" id="statTotalDepartments">6+</div>
+          <div class="stat-label">Academic Departments</div>
+        </div>
+        <div class="stat-card-mini">
+          <div class="stat-number" id="statTotalSteps">30+</div>
+          <div class="stat-label">Voice-Guided Checkpoints</div>
+        </div>
+        <div class="stat-card-mini">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Accessible Smart Campus</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Department Selection Section -->
+  <section class="section-wrapper" id="departments">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-pill">Campus Departments</span>
+        <h2 class="section-title">Select a Department to Begin Navigation</h2>
+        <p class="section-desc">
+          Click any department to open its high-resolution image sequence. The system will automatically narrate directions step-by-step from the campus gate to your destination.
+        </p>
+      </div>
+
+      <!-- Dynamic Department Grid -->
+      <div class="department-grid" id="departmentGrid">
+        <!-- Rendered by js/home.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- College Information Section -->
+  <section class="section-wrapper bg-white" id="college-info">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-pill">Campus Overview</span>
+        <h2 class="section-title">College Information &amp; Infrastructure</h2>
+        <p class="section-desc">
+          Learn about our rich institutional legacy, recognized degree programs, cutting-edge research facilities, and campus leadership.
+        </p>
+      </div>
+
+      <!-- Tabs Bar -->
+      <div class="college-info-tabs-bar">
+        <button class="college-info-tab-btn active" data-category="about">
+          <i class="fa-solid fa-circle-info"></i> About College
+        </button>
+        <button class="college-info-tab-btn" data-category="history">
+          <i class="fa-solid fa-landmark"></i> College History
+        </button>
+        <button class="college-info-tab-btn" data-category="courses">
+          <i class="fa-solid fa-graduation-cap"></i> Courses Offered
+        </button>
+        <button class="college-info-tab-btn" data-category="facilities">
+          <i class="fa-solid fa-microscope"></i> Facilities
+        </button>
+        <button class="college-info-tab-btn" data-category="contact">
+          <i class="fa-solid fa-address-book"></i> Directory &amp; Contacts
+        </button>
+      </div>
+
+      <!-- Content Area -->
+      <div id="collegeInfoContent">
+        <!-- Dynamically injected by js/home.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Announcements, Events & Notices Section -->
+  <section class="section-wrapper" id="announcements">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-pill">Notice Board</span>
+        <h2 class="section-title">Announcements, Events &amp; Important Notices</h2>
+        <p class="section-desc">
+          Stay up to date with the latest campus notifications, technical symposiums, examination timetables, and placement schedules.
+        </p>
+      </div>
+
+      <!-- Notices Filter -->
+      <div class="notices-filter-bar">
+        <button class="notice-filter-btn active" data-filter="all">All Updates</button>
+        <button class="notice-filter-btn" data-filter="announcements">Announcements</button>
+        <button class="notice-filter-btn" data-filter="events">Events</button>
+        <button class="notice-filter-btn" data-filter="notices">Important Notices</button>
+      </div>
+
+      <!-- Dynamic Notice Grid -->
+      <div class="announcements-grid" id="announcementsGrid">
+        <!-- Rendered by js/home.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact & Location Section -->
+  <section class="section-wrapper bg-white" id="contact">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-pill">Campus Location</span>
+        <h2 class="section-title">Visit Apex Institute of Technology</h2>
+        <p class="section-desc">
+          We welcome prospective students, parents, researchers, and academic delegates to our modern eco-friendly campus.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+        <div style="background-color: var(--neutral-50); border: 1px solid var(--neutral-200); border-radius: var(--radius-xl); padding: 2rem;">
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--primary-blue); margin-bottom: 1.25rem;">
+            <i class="fa-solid fa-building-columns"></i> Campus Main Address
+          </h3>
+          <p style="color: var(--neutral-700); margin-bottom: 1rem; line-height: 1.6;">
+            <strong>Apex Institute of Technology &amp; Science</strong><br />
+            100 University Boulevard, Tech Valley Campus<br />
+            Cityville, State - 560001
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem; color: var(--neutral-700);">
+            <div><i class="fa-solid fa-phone text-blue-600 mr-2"></i> +1 (555) 234-5678 (General Enquiries)</div>
+            <div><i class="fa-solid fa-envelope text-blue-600 mr-2"></i> info@apexcollege.edu</div>
+            <div><i class="fa-solid fa-shield-halved text-emerald-600 mr-2"></i> +1 (555) 234-9999 (24/7 Campus Security)</div>
+            <div><i class="fa-solid fa-clock text-blue-600 mr-2"></i> Visiting Hours: Mon - Sat: 8:30 AM to 5:30 PM</div>
+          </div>
+        </div>
+
+        <div style="background-color: var(--neutral-50); border: 1px solid var(--neutral-200); border-radius: var(--radius-xl); padding: 2rem; display: flex; flex-direction: column; justify-content: center;">
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--accent-green); margin-bottom: 0.75rem;">
+            <i class="fa-solid fa-map-location-dot"></i> Navigation Assistance
+          </h3>
+          <p style="color: var(--neutral-600); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6;">
+            Need help reaching a specific lab or faculty chamber? Use our interactive visual navigator above, or inquire at the Main Security Gate Kiosk upon arrival.
+          </p>
+          <a href="#searchSection" class="start-navigation-btn" style="text-decoration: none;">
+            <span>Open Campus Search</span>
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       MAIN FEATURE: IMAGE-BASED NAVIGATION VIEWER MODAL
+       ========================================================================== -->
+  <div class="navigation-modal-backdrop" id="navigationModal">
+    <div class="navigation-stage-container">
+      
+      <!-- Top Stage Header -->
+      <div class="nav-stage-header">
+        <div class="nav-header-left">
+          <span class="nav-dept-badge" id="navDeptBadge">
+            <i class="fa-solid fa-location-dot"></i> CSE Department
+          </span>
+          <div class="nav-counter-pill" id="navStepCounter">
+            <span class="step-num">1</span>
+            <span class="step-divider">/</span>
+            <span class="step-total">5</span>
+          </div>
+        </div>
+
+        <div class="nav-header-right">
+          <button class="nav-mute-toggle-btn" id="navMuteToggleBtn" title="Toggle Voice Mute">
+            <i class="fa-solid fa-volume-high"></i>
+            <span>Mute Voice</span>
+          </button>
+          <button class="nav-close-btn" id="closeNavModalBtn" title="Close Navigation">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Line & Interactive Step Pills -->
+      <div class="nav-progress-wrapper">
+        <div class="nav-progress-bar-track">
+          <div class="nav-progress-bar-fill" id="navProgressBar"></div>
+        </div>
+        <div class="nav-progress-dots" id="navProgressDots">
+          <!-- Step jump dots rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Navigation Main Viewport: Large Image + Instructions -->
+      <div class="nav-main-viewport">
+        <!-- Visual Image Stage -->
+        <div class="nav-image-stage">
+          <img src="" alt="Navigation Step" id="navMainImage" class="nav-main-image" />
+          <div class="nav-image-spinner" id="navImageSpinner"></div>
+        </div>
+
+        <!-- Instruction Text & Voice Control Panel -->
+        <div class="nav-instruction-panel">
+          <div class="nav-instruction-top">
+            <h3 class="nav-step-title" id="navStepTitle">Checkpoint Title</h3>
+            
+            <div class="nav-landmarks-list" id="navLandmarksList">
+              <!-- Landmarks tags rendered here -->
+            </div>
+
+            <!-- Voice Instruction Card -->
+            <div class="voice-instruction-card">
+              <div class="voice-status-header">
+                <span class="voice-status-label">
+                  <i class="fa-solid fa-volume-high"></i> Voice Guidance
+                </span>
+                <div class="voice-soundwave" id="navVoiceWave">
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                </div>
+              </div>
+
+              <!-- Main Instruction Text -->
+              <p class="nav-instruction-text" id="navInstructionText">
+                Navigation instruction will appear here and will be automatically spoken by the voice engine.
+              </p>
+            </div>
+
+            <!-- Voice Control Actions -->
+            <div class="voice-audio-controls-row">
+              <button class="audio-ctrl-btn" id="navPlayVoiceBtn" title="Play Voice Guidance">
+                <i class="fa-solid fa-play"></i>
+                <span>Play Voice</span>
+              </button>
+              <button class="audio-ctrl-btn" id="navPauseVoiceBtn" title="Pause Voice Guidance" style="display: none;">
+                <i class="fa-solid fa-pause"></i>
+                <span>Pause</span>
+              </button>
+              <button class="audio-ctrl-btn" id="navRestartVoiceBtn" title="Replay Voice Instruction">
+                <i class="fa-solid fa-rotate-left"></i>
+                <span>Restart Voice</span>
+              </button>
+            </div>
+          </div>
+
+          <div style="margin-top: 1rem; font-size: 0.775rem; color: var(--neutral-500); display: flex; align-items: center; gap: 0.4rem;">
+            <i class="fa-solid fa-keyboard"></i>
+            <span>Tip: Use <strong>← Left</strong> and <strong>Right →</strong> keys to navigate, <strong>Space</strong> to pause voice.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Footer Dock: Previous / Next Buttons -->
+      <div class="nav-stage-footer">
+        <button class="nav-btn-prev" id="navPrevBtn">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Previous Step</span>
+        </button>
+
+        <button class="nav-btn-next" id="navNextBtn">
+          <span>Next Step</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Completion Celebration Overlay -->
+      <div class="nav-completion-overlay" id="navCompletionOverlay">
+        <div class="completion-card-inner">
+          <div class="completion-trophy-circle">
+            <i class="fa-solid fa-flag-checkered"></i>
+          </div>
+          <h2 class="completion-heading">Destination Reached!</h2>
+          <p class="completion-subheading">
+            You have successfully navigated to your destination.
+          </p>
+
+          <div class="destination-info-pill">
+            <span class="destination-name">Department Name</span>
+            <span class="destination-location">Building &amp; Floor</span>
+          </div>
+
+          <div class="completion-actions-row">
+            <button class="btn-restart-nav" id="navCompletionRestartBtn">
+              <i class="fa-solid fa-rotate-left"></i>
+              <span>Restart Navigation</span>
+            </button>
+            <button class="btn-close-nav" id="navCompletionCloseBtn">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Close Viewer</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Notice Details Modal -->
+  <div class="detail-modal" id="noticeDetailModal">
+    <div class="detail-modal-card">
+      <div class="detail-modal-header">
+        <div>
+          <span class="notice-cat-badge announcements" id="modalNoticeCategory">NOTICE</span>
+          <span class="notice-date ml-2" id="modalNoticeDate"></span>
+        </div>
+        <button class="close-modal-btn" id="closeNoticeModalBtn">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="detail-modal-body">
+        <img src="" alt="Notice Banner" class="modal-notice-banner-img" id="modalNoticeImage" />
+        <h3 class="text-xl font-bold text-slate-900 mb-3" id="modalNoticeTitle">Notice Title</h3>
+        <div class="text-slate-700 leading-relaxed text-sm" id="modalNoticeContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-top-grid">
+        <div class="footer-brand-col">
+          <div class="brand-wrapper">
+            <div class="brand-logo-badge">
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div class="brand-text-col">
+              <span class="brand-title" style="color: #ffffff;">Apex Institute</span>
+              <span class="brand-tagline">Campus Navigator</span>
+            </div>
+          </div>
+          <p>
+            Empowering students, visiting professors, and guests with intelligent image-guided voice navigation across all campus departments and facilities.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Quick Navigation</h4>
+          <ul class="footer-links-list">
+            <li><a href="#home" class="footer-link">Home</a></li>
+            <li><a href="#searchSection" class="footer-link">Search Campus</a></li>
+            <li><a href="#departments" class="footer-link">Academic Departments</a></li>
+            <li><a href="#college-info" class="footer-link">College Information</a></li>
+            <li><a href="#announcements" class="footer-link">Notices &amp; Events</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Popular Departments</h4>
+          <ul class="footer-links-list">
+            <li><a href="#departments" class="footer-link">Computer Science (CSE)</a></li>
+            <li><a href="#departments" class="footer-link">Artificial Intelligence (AI)</a></li>
+            <li><a href="#departments" class="footer-link">Electronics &amp; Circuits (EDC)</a></li>
+            <li><a href="#departments" class="footer-link">Department of Botany</a></li>
+            <li><a href="#departments" class="footer-link">Department of Zoology</a></li>
+            <li><a href="#departments" class="footer-link">Central Library</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Campus Helpdesk</h4>
+          <div class="footer-contact-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>100 University Blvd, Tech Valley Campus</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fa-solid fa-phone"></i>
+            <span>+1 (555) 234-5678</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fa-solid fa-envelope"></i>
+            <span>support@apexcollege.edu</span>
+          </div>
+          <div style="margin-top: 1rem;">
+            <a href="/login.html" style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; font-weight: 700; color: var(--accent-emerald);">
+              <i class="fa-solid fa-lock"></i> Super Admin &amp; Staff Login
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <span>&copy; 2026 Apex Institute of Technology &amp; Science. All rights reserved.</span>
+        <span>Built with Modular Web Standards &amp; Firebase</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Modules -->
+  <script type="module" src="js/home.js"></script>
+</body>
+</html>

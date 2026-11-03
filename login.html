@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrator Login - Apex College Smart Navigation</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Application Styles -->
+  <link rel="stylesheet" href="css/main.css" />
+  <style>
+    .login-page-body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 50%, #ecfdf5 100%);
+    }
+
+    .login-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .login-card {
+      background-color: #ffffff;
+      border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-xl);
+      max-width: 480px;
+      width: 100%;
+      padding: 2.75rem 2.25rem;
+      box-shadow: 0 20px 40px -10px rgba(15, 59, 122, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--primary-blue), var(--accent-green));
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-logo-circle {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+      color: #ffffff;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin: 0 auto 1.25rem;
+      box-shadow: 0 8px 18px rgba(15, 59, 122, 0.25);
+    }
+
+    .login-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--neutral-900);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .login-subtitle {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+    }
+
+    .login-alert-box {
+      display: none;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .login-alert-box.error {
+      display: flex;
+      background-color: #fee2e2;
+      border: 1px solid #fca5a5;
+      color: #b91c1c;
+    }
+
+    .login-form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .login-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--neutral-800);
+      margin-bottom: 0.4rem;
+    }
+
+    .login-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .login-input-wrap i {
+      position: absolute;
+      left: 1rem;
+      color: var(--neutral-400);
+      font-size: 1rem;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.75rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      border: 1.5px solid var(--neutral-300);
+      border-radius: 10px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .login-input:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(15, 59, 122, 0.12);
+    }
+
+    .login-submit-btn {
+      width: 100%;
+      padding: 0.85rem;
+      background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 10px;
+      margin-top: 1rem;
+      box-shadow: 0 6px 16px rgba(15, 59, 122, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .login-submit-btn:hover {
+      background: var(--primary-blue-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(15, 59, 122, 0.35);
+    }
+
+    .login-submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    /* Demo Quick Selector */
+    .demo-credentials-box {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px dashed var(--neutral-300);
+      text-align: center;
+    }
+
+    .demo-pill-title {
+      font-size: 0.775rem;
+      font-weight: 800;
+      color: var(--neutral-500);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .demo-buttons-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .btn-quick-demo {
+      padding: 0.55rem 0.85rem;
+      background-color: var(--neutral-100);
+      border: 1px solid var(--neutral-200);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: var(--neutral-700);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+
+    .btn-quick-demo:hover {
+      background-color: var(--light-blue);
+      border-color: var(--secondary-blue);
+      color: var(--primary-blue);
+    }
+
+    .btn-quick-demo .badge-demo-role {
+      font-size: 0.675rem;
+      font-weight: 800;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+    }
+
+    .badge-demo-role.super {
+      background-color: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .badge-demo-role.admin {
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+
+    .return-home-row {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .return-home-link {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--neutral-600);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .return-home-link:hover {
+      color: var(--primary-blue);
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 1.25rem 0.75rem;
+      }
+      .login-card {
+        padding: 1.75rem 1.25rem;
+        border-radius: var(--radius-lg);
+      }
+      .login-title {
+        font-size: 1.35rem;
+      }
+      .login-logo-circle {
+        width: 50px;
+        height: 50px;
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
+</head>
+<body class="login-page-body">
+
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-logo-circle">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h1 class="login-title">Administrator &amp; Super Admin Portal</h1>
+        <p class="login-subtitle">Sign in with your authorized administrator email and password to access navigation controls and department management.</p>
+      </div>
+
+      <div class="login-alert-box error" id="loginAlertBox">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span id="loginAlertMessage">Authentication error</span>
+      </div>
+
+      <form id="adminLoginForm">
+        <div class="login-form-group">
+          <label class="login-label" for="loginEmail">Administrator Email Address *</label>
+          <div class="login-input-wrap">
+            <i class="fa-solid fa-envelope"></i>
+            <input 
+              type="email" 
+              id="loginEmail" 
+              class="login-input" 
+              placeholder="Enter email" 
+              required 
+              autocomplete="email"
+            />
+          </div>
+        </div>
+
+        <div class="login-form-group">
+          <label class="login-label" for="loginPassword">Password *</label>
+          <div class="login-input-wrap" style="position: relative;">
+            <i class="fa-solid fa-lock"></i>
+            <input 
+              type="password" 
+              id="loginPassword" 
+              class="login-input" 
+              placeholder="Enter password" 
+              required 
+              autocomplete="current-password"
+              style="padding-right: 42px;"
+            />
+            <button type="button" id="togglePasswordVisibilityBtn" title="Show/Hide Password" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #94a3b8; font-size: 0.95rem;">
+              <i class="fa-solid fa-eye" id="eyeIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="login-submit-btn" id="loginSubmitBtn">
+          <span>Authenticate &amp; Open Control Center</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="return-home-row">
+        <a href="/" class="return-home-link">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Return to Campus Navigation Home</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Authentication Script -->
+  <script type="module">
+    import { authManager } from './js/auth.js';
+    import { initFirebase } from './js/firebase-config.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await initFirebase();
+
+      const form = document.getElementById('adminLoginForm');
+      const emailInput = document.getElementById('loginEmail');
+      const passwordInput = document.getElementById('loginPassword');
+      const submitBtn = document.getElementById('loginSubmitBtn');
+      const alertBox = document.getElementById('loginAlertBox');
+      const alertMsg = document.getElementById('loginAlertMessage');
+      const togglePassBtn = document.getElementById('togglePasswordVisibilityBtn');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      // Password visibility toggle
+      togglePassBtn?.addEventListener('click', () => {
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          eyeIcon.className = 'fa-solid fa-eye-slash';
+        } else {
+          passwordInput.type = 'password';
+          eyeIcon.className = 'fa-solid fa-eye';
+        }
+      });
+
+      const showError = (message) => {
+        alertMsg.textContent = message;
+        alertBox.classList.add('error');
+        alertBox.style.display = 'flex';
+      };
+
+      const hideError = () => {
+        alertBox.style.display = 'none';
+      };
+
+      // Form submission validation
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideError();
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (!email) {
+          showError("Please enter your administrator email address.");
+          emailInput.focus();
+          return;
+        }
+
+        if (!password) {
+          showError("Please enter your password.");
+          passwordInput.focus();
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...`;
+
+        try {
+          const result = await authManager.login(email, password);
+          if (result && result.success) {
+            window.location.href = '/admin.html';
+          }
+        } catch (err) {
+          console.error("Login authentication rejected:", err);
+          showError(err.message || "Incorrect email or password. Please try again.");
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>Authenticate &amp; Open Control Center</span> <i class="fa-solid fa-arrow-right"></i>`;
+        }
+      });
+    });
+  </script>
+    });
+  </script>
+</body>
+</html>

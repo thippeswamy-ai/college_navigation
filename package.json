@@ -1,0 +1,22 @@
+{
+  "name": "college-navigation",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Smart College Navigation and Information Management Website with Voice Guidance & Admin Dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "college",
+    "navigation",
+    "voice-guidance",
+    "firebase",
+    "speech-synthesis",
+    "campus-map",
+    "admin-dashboard"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}

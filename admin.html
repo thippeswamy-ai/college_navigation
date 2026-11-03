@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Super Admin Control Center - Smart College Navigation</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/navigation.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="admin-page-body">
+
+  <div class="admin-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-brand-box">
+        <div class="sidebar-brand-logo">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div>
+          <h2 class="sidebar-brand-title">Apex Super Admin</h2>
+          <span class="sidebar-brand-subtitle">Exclusive Control Center</span>
+        </div>
+      </div>
+
+      <ul class="sidebar-nav-list">
+        <li class="sidebar-section-header">Dashboard</li>
+        <li>
+          <a class="sidebar-nav-item active" data-tab="overview">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Overview &amp; Stats</span>
+          </a>
+        </li>
+
+        <li class="sidebar-section-header">Navigation Engine</li>
+        <li>
+          <a class="sidebar-nav-item" data-tab="departments">
+            <i class="fa-solid fa-building-columns"></i>
+            <span>Departments</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar-nav-item" data-tab="navigation">
+            <i class="fa-solid fa-map-location-dot"></i>
+            <span>Navigation Images</span>
+          </a>
+        </li>
+
+        <li class="sidebar-section-header">Campus Information</li>
+        <li>
+          <a class="sidebar-nav-item" data-tab="college-info">
+            <i class="fa-solid fa-newspaper"></i>
+            <span>College Information</span>
+          </a>
+        </li>
+
+        <!-- Super Admin Only Tab -->
+        <li class="sidebar-section-header" id="superAdminSectionHeader">Security &amp; Roles</li>
+        <li id="tabNavAdmins">
+          <a class="sidebar-nav-item" data-tab="administrators">
+            <i class="fa-solid fa-users-gear"></i>
+            <span>Administrators</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <a href="/" target="_blank" class="sidebar-public-site-link">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <span>Open Public Site</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="admin-main-wrap">
+      
+      <!-- Topbar Header -->
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <button class="mobile-sidebar-toggle" id="mobileSidebarToggle" aria-label="Toggle Sidebar">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          
+          <!-- Firebase Connection Indicator -->
+          <div class="firebase-status-badge" id="firebaseStatusIndicator">
+            <span class="status-dot demo"></span>
+            <span>Checking Firebase Status...</span>
+          </div>
+        </div>
+
+        <div class="admin-topbar-right">
+          <!-- User Profile & Role Info -->
+          <div class="admin-user-profile-badge">
+            <div class="user-avatar-circle">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="user-text-meta">
+              <span class="user-name-text" id="adminProfileName">Admin User</span>
+              <div class="flex items-center gap-1">
+                <span class="role-badge super" id="userRoleBadge">SUPER ADMIN</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="admin-logout-btn" id="adminLogoutBtn" title="Sign Out">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Access notice for department admins -->
+      <div id="adminAccessNotice" style="display: none; background: #eff6ff; border-bottom: 1px solid #bfdbfe; padding: 0.6rem 2rem; font-size: 0.825rem; font-weight: 700; color: #1e40af;">
+      </div>
+
+      <!-- Dashboard Pages / Tabs Container -->
+      <main class="admin-content-area">
+
+        <!-- TAB 1: OVERVIEW & ANALYTICS -->
+        <section class="dashboard-tab-content active" id="tab-overview">
+          <div class="dashboard-page-header">
+            <div>
+              <h1 class="dashboard-title">Dashboard Overview</h1>
+              <p class="dashboard-subtitle">Real-time campus navigation status, content counts, and database summary.</p>
+            </div>
+            <div>
+              <button class="admin-action-btn-emerald" id="seedFirestoreBtn">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Seed Data to Firestore</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Statistics Cards Grid -->
+          <div class="metrics-grid-row">
+            <div class="metric-card">
+              <div class="metric-icon-box blue">
+                <i class="fa-solid fa-building-columns"></i>
+              </div>
+              <div>
+                <div class="metric-value" id="statTotalDepartments">0</div>
+                <div class="metric-title">Total Departments</div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon-box green">
+                <i class="fa-solid fa-images"></i>
+              </div>
+              <div>
+                <div class="metric-value" id="statTotalNavImages">0</div>
+                <div class="metric-title">Navigation Images</div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon-box purple">
+                <i class="fa-solid fa-newspaper"></i>
+              </div>
+              <div>
+                <div class="metric-value" id="statTotalCollegeInfo">0</div>
+                <div class="metric-title">College Info Posts</div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon-box amber">
+                <i class="fa-solid fa-user-shield"></i>
+              </div>
+              <div>
+                <div class="metric-value" id="statTotalAdmins">0</div>
+                <div class="metric-title">Administrators</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Navigation Preview Launcher -->
+          <div class="data-card" style="padding: 1.5rem; background: linear-gradient(135deg, #eff6ff, #f0fdf4); border-color: #bfdbfe;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--primary-blue); margin-bottom: 0.25rem;">
+                  <i class="fa-solid fa-headphones-simple"></i> Test Voice Navigation Experience
+                </h3>
+                <p style="font-size: 0.875rem; color: var(--neutral-600);">
+                  Preview how students and visitors experience department navigation with automated image switching and voice guidance.
+                </p>
+              </div>
+              <a href="/" target="_blank" class="admin-action-btn-primary">
+                <span>Open Student Navigation View</span>
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: DEPARTMENT MANAGEMENT -->
+        <section class="dashboard-tab-content" id="tab-departments">
+          <div class="dashboard-page-header">
+            <div>
+              <h1 class="dashboard-title">Department Management</h1>
+              <p class="dashboard-subtitle">Create, configure, and maintain college academic departments and buildings.</p>
+            </div>
+            <button class="admin-action-btn-primary" id="openAddDeptModalBtn">
+              <i class="fa-solid fa-plus"></i>
+              <span>Add Department</span>
+            </button>
+          </div>
+
+          <div class="data-card">
+            <div class="data-card-header">
+              <h3 class="data-card-title">All Departments</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-data-table">
+                <thead>
+                  <tr>
+                    <th>Department</th>
+                    <th>Building &amp; Floor</th>
+                    <th>Head of Dept</th>
+                    <th>Navigation Steps</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="departmentsTableBody">
+                  <!-- Rendered by js/admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: NAVIGATION IMAGE MANAGEMENT -->
+        <section class="dashboard-tab-content" id="tab-navigation">
+          <div class="dashboard-page-header">
+            <div>
+              <h1 class="dashboard-title">Navigation Sequences &amp; Voice Images</h1>
+              <p class="dashboard-subtitle">Upload turn-by-turn images, write navigation instructions, and preview natural voice guidance.</p>
+            </div>
+            <div class="flex gap-2">
+              <button class="admin-action-btn-emerald" id="previewFullSequenceBtn" style="display: none;">
+                <i class="fa-solid fa-play"></i>
+                <span>Preview Department Sequence</span>
+              </button>
+              <button class="admin-action-btn-primary" id="openAddNavModalBtn">
+                <i class="fa-solid fa-plus"></i>
+                <span>Add Navigation Step</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="data-card">
+            <div class="data-card-header">
+              <div class="flex items-center gap-3">
+                <h3 class="data-card-title">Navigation Steps</h3>
+                <label for="navDeptFilterSelect" class="text-xs font-bold text-slate-500 uppercase">Filter Department:</label>
+                <select class="filter-select" id="navDeptFilterSelect">
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-data-table">
+                <thead>
+                  <tr>
+                    <th>Seq</th>
+                    <th>Image</th>
+                    <th>Department</th>
+                    <th>Checkpoint &amp; Voice Instruction</th>
+                    <th>Voice Preview</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="navigationImagesTableBody">
+                  <!-- Rendered by js/admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 4: COLLEGE INFORMATION MANAGEMENT -->
+        <section class="dashboard-tab-content" id="tab-college-info">
+          <div class="dashboard-page-header">
+            <div>
+              <h1 class="dashboard-title">College Information &amp; Notices</h1>
+              <p class="dashboard-subtitle">Publish institutional announcements, campus history, degree courses, facilities, and events.</p>
+            </div>
+            <button class="admin-action-btn-primary" id="openAddInfoModalBtn">
+              <i class="fa-solid fa-plus"></i>
+              <span>Create Information Post</span>
+            </button>
+          </div>
+
+          <div class="data-card">
+            <div class="data-card-header">
+              <div class="flex items-center gap-3">
+                <h3 class="data-card-title">Published Information &amp; Notices</h3>
+                <label for="collegeInfoCategoryFilter" class="text-xs font-bold text-slate-500 uppercase">Category:</label>
+                <select class="filter-select" id="collegeInfoCategoryFilter">
+                  <option value="all">All Categories</option>
+                  <option value="announcements">Announcements</option>
+                  <option value="events">Events</option>
+                  <option value="notices">Important Notices</option>
+                  <option value="about">About College</option>
+                  <option value="history">History</option>
+                  <option value="courses">Courses</option>
+                  <option value="facilities">Facilities</option>
+                  <option value="contact">Contacts</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-data-table">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Title &amp; Summary</th>
+                    <th>Date / Meta</th>
+                    <th>Badge</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="collegeInfoTableBody">
+                  <!-- Rendered by js/admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 5: ADMINISTRATOR MANAGEMENT (Super Admin Only) -->
+        <section class="dashboard-tab-content" id="tab-administrators">
+          <div class="dashboard-page-header">
+            <div>
+              <h1 class="dashboard-title">Administrator Accounts &amp; Permissions</h1>
+              <p class="dashboard-subtitle">Manage Super Admins and department-restricted administrators.</p>
+            </div>
+            <button class="admin-action-btn-primary" id="openAddAdminModalBtn">
+              <i class="fa-solid fa-user-plus"></i>
+              <span>Add Administrator</span>
+            </button>
+          </div>
+
+          <div class="data-card">
+            <div class="data-card-header">
+              <h3 class="data-card-title">Authorized System Administrators</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-data-table">
+                <thead>
+                  <tr>
+                    <th>Administrator</th>
+                    <th>Role</th>
+                    <th>Assigned Departments</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="administratorsTableBody">
+                  <!-- Rendered by js/admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 1: ADD / EDIT DEPARTMENT
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="deptModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 class="text-lg font-bold text-slate-900" id="deptModalTitle">Add Department</h3>
+        <button class="close-modal-btn" id="closeDeptModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="departmentForm">
+        <div class="admin-modal-body">
+          <input type="hidden" id="deptIdInput" />
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="deptNameInput">Department Name *</label>
+              <input type="text" id="deptNameInput" class="form-input" placeholder="e.g. Computer Science & Engineering" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="deptCodeInput">Department Code *</label>
+              <input type="text" id="deptCodeInput" class="form-input" placeholder="e.g. CSE" required />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="deptBuildingInput">Building / Complex</label>
+              <input type="text" id="deptBuildingInput" class="form-input" placeholder="e.g. Science Block A" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="deptFloorInput">Floor / Wing</label>
+              <input type="text" id="deptFloorInput" class="form-input" placeholder="e.g. 2nd Floor, East Wing" />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="deptHodInput">Head of Department (HOD)</label>
+              <input type="text" id="deptHodInput" class="form-input" placeholder="e.g. Dr. Eleanor Vance" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="deptStatusSelect">Publication Status</label>
+              <select id="deptStatusSelect" class="form-select">
+                <option value="published">Published (Visible to students)</option>
+                <option value="draft">Draft (Hidden)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="deptDescInput">Description &amp; Highlights</label>
+            <textarea id="deptDescInput" class="form-textarea" rows="3" placeholder="Brief overview of laboratories, focus areas, and research..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="deptKeywordsInput">Search Keywords (comma separated)</label>
+            <input type="text" id="deptKeywordsInput" class="form-input" placeholder="e.g. software, coding, ai, room 204, lab 1" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Cover / Thumbnail Image</label>
+            <input type="file" id="deptFileInput" class="form-input" accept="image/*" />
+            <input type="url" id="deptThumbnailInput" class="form-input mt-2" placeholder="Or enter an image URL (https://...)" />
+            <img src="" id="deptThumbnailPreview" alt="Thumbnail Preview" class="file-preview-thumb" />
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="table-btn" onclick="document.getElementById('deptModal').classList.remove('active')">Cancel</button>
+          <button type="submit" class="admin-action-btn-primary">Save Department</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 2: ADD / EDIT NAVIGATION STEP IMAGE & VOICE
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="navFormModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 class="text-lg font-bold text-slate-900" id="navFormModalTitle">Add Navigation Image Step</h3>
+        <button class="close-modal-btn" id="closeNavFormModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="navImageForm">
+        <div class="admin-modal-body">
+          <input type="hidden" id="navImageIdInput" />
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="navFormDeptSelect">Target Department *</label>
+              <select id="navFormDeptSelect" class="form-select" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="navSequenceInput">Sequence Step Number *</label>
+              <input type="number" id="navSequenceInput" class="form-input" min="1" max="50" value="1" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="navStepTitleInput">Checkpoint / Landmark Title *</label>
+            <input type="text" id="navStepTitleInput" class="form-input" placeholder="e.g. Main Gate, Science Block A Foyer, Staircase 2" required />
+          </div>
+
+          <!-- Instruction Text & Voice Preview Button -->
+          <div class="form-group">
+            <label class="form-label" for="navInstructionInput">Navigation Instruction Text (Spoken by Voice) *</label>
+            <textarea id="navInstructionInput" class="form-textarea" rows="4" placeholder="Enter clear, turn-by-turn guidance. This instruction will be automatically read aloud to students via voice." required></textarea>
+            
+            <div class="voice-test-box-row">
+              <span class="text-xs text-slate-500">Test how this instruction sounds with browser speech:</span>
+              <button type="button" class="btn-test-voice" id="testVoiceBtn">
+                <i class="fa-solid fa-volume-high"></i>
+                <span>Test Voice Preview</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Upload Navigation Image *</label>
+            <input type="file" id="navFileInput" class="form-input" accept="image/*" />
+            <input type="url" id="navImageUrlInput" class="form-input mt-2" placeholder="Or enter direct Image URL (https://...)" />
+            <img src="" id="navImagePreviewThumbnail" alt="Step Preview" class="file-preview-thumb" />
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="navLandmarksInput">Visible Landmarks / Checkpoints (comma separated)</label>
+              <input type="text" id="navLandmarksInput" class="form-input" placeholder="e.g. Fountain, ATM, Elevator Bay" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="navStepStatusSelect">Status</label>
+              <select id="navStepStatusSelect" class="form-select">
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="table-btn" onclick="document.getElementById('navFormModal').classList.remove('active')">Cancel</button>
+          <button type="submit" class="admin-action-btn-primary">Save Navigation Step</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 3: ADD / EDIT COLLEGE INFORMATION POST
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="infoModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 class="text-lg font-bold text-slate-900" id="infoModalTitle">College Information Post</h3>
+        <button class="close-modal-btn" id="closeInfoModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="collegeInfoForm">
+        <div class="admin-modal-body">
+          <input type="hidden" id="infoIdInput" />
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="infoCategorySelect">Category *</label>
+              <select id="infoCategorySelect" class="form-select" required>
+                <option value="announcements">Announcements</option>
+                <option value="events">Events</option>
+                <option value="notices">Important Notices</option>
+                <option value="about">About College</option>
+                <option value="history">College History</option>
+                <option value="courses">Courses Offered</option>
+                <option value="facilities">College Facilities</option>
+                <option value="contact">Contact Information</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="infoBadgeInput">Badge / Highlight Tag</label>
+              <input type="text" id="infoBadgeInput" class="form-input" placeholder="e.g. Urgent, NAAC A++, Placement, New" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="infoTitleInput">Post Title *</label>
+            <input type="text" id="infoTitleInput" class="form-input" placeholder="e.g. Semester End Examination Schedule" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="infoSummaryInput">Short Summary</label>
+            <input type="text" id="infoSummaryInput" class="form-input" placeholder="Brief 1-2 sentence preview..." />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="infoContentInput">Full Content / Details *</label>
+            <textarea id="infoContentInput" class="form-textarea" rows="4" placeholder="Detailed content..." required></textarea>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="infoDateInput">Date / Timeframe</label>
+              <input type="text" id="infoDateInput" class="form-input" placeholder="e.g. November 10, 2026" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="infoStatusSelect">Publication Status</label>
+              <select id="infoStatusSelect" class="form-select">
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Banner Image (optional)</label>
+            <input type="file" id="infoFileInput" class="form-input" accept="image/*" />
+            <input type="url" id="infoImageUrlInput" class="form-input mt-2" placeholder="Or enter image URL (https://...)" />
+            <img src="" id="infoImagePreview" alt="Banner Preview" class="file-preview-thumb" />
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="infoPinnedCheckbox" />
+              <span>Pin this post to top of announcements</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="table-btn" onclick="document.getElementById('infoModal').classList.remove('active')">Cancel</button>
+          <button type="submit" class="admin-action-btn-primary">Save Information Post</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 4: CREATE ADMINISTRATOR (SUPER ADMIN ONLY)
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="adminModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 class="text-lg font-bold text-slate-900">Create Administrator Account</h3>
+        <button class="close-modal-btn" id="closeAdminModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="adminAccountForm">
+        <div class="admin-modal-body">
+          <div class="form-group">
+            <label class="form-label" for="newAdminNameInput">Full Name *</label>
+            <input type="text" id="newAdminNameInput" class="form-input" placeholder="e.g. Dr. Sarah Jenkins" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newAdminEmailInput">Administrator Email *</label>
+            <input type="email" id="newAdminEmailInput" class="form-input" placeholder="e.g. sjenkins@college.edu" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newAdminPasswordInput">Login Password *</label>
+            <input type="password" id="newAdminPasswordInput" class="form-input" placeholder="Set password for this administrator (e.g. 123456789)" required minlength="6" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newAdminRoleSelect">Administrative Role *</label>
+            <select id="newAdminRoleSelect" class="form-select" required>
+              <option value="admin">Admin (Can add &amp; manage departments &amp; images)</option>
+              <option value="superadmin">Super Admin (Full System Control)</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="deptAssignmentGroup">
+            <label class="form-label">Assign Department Access (for Department Admin)</label>
+            <div class="checkbox-group" id="adminDeptCheckboxes">
+              <!-- Rendered by js/admin.js -->
+            </div>
+            <span class="text-xs text-slate-500 mt-1 block">Super Admins automatically have unrestricted access to all departments.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="newAdminPublishCheckbox" checked />
+              <span>Allow publishing College Information &amp; Notices</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="table-btn" onclick="document.getElementById('adminModal').classList.remove('active')">Cancel</button>
+          <button type="submit" class="admin-action-btn-primary">Create Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 5: FIREBASE SETTINGS / CONFIGURATION WIZARD
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="firebaseSettingsModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 class="text-lg font-bold text-slate-900">
+          <i class="fa-solid fa-fire text-amber-500 mr-1"></i> Firebase Connection Settings
+        </h3>
+        <button class="close-modal-btn" id="closeFirebaseSettingsBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="admin-modal-body">
+        <p class="text-xs text-slate-600 mb-3">
+          Paste your Firebase Project configuration JSON below to connect this app to your live Firebase Authentication, Cloud Firestore, and Firebase Storage:
+        </p>
+        <textarea id="firebaseConfigJsonInput" class="form-textarea font-mono text-xs" rows="10" placeholder="{ &quot;apiKey&quot;: &quot;...&quot;, &quot;projectId&quot;: &quot;...&quot; }"></textarea>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" class="table-btn" onclick="document.getElementById('firebaseSettingsModal').classList.remove('active')">Close</button>
+        <button type="button" class="admin-action-btn-primary" id="saveFirebaseConfigBtn">Save &amp; Connect Firebase</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       EMBEDDED NAVIGATION VIEWER MODAL FOR ADMIN PREVIEW
+       ========================================================================== -->
+  <div class="navigation-modal-backdrop" id="navigationModal">
+    <div class="navigation-stage-container">
+      <div class="nav-stage-header">
+        <div class="nav-header-left">
+          <span class="nav-dept-badge" id="navDeptBadge">CSE Department</span>
+          <div class="nav-counter-pill" id="navStepCounter">
+            <span class="step-num">1</span>
+            <span class="step-divider">/</span>
+            <span class="step-total">5</span>
+          </div>
+        </div>
+        <div class="nav-header-right">
+          <button class="nav-mute-toggle-btn" id="navMuteToggleBtn"><i class="fa-solid fa-volume-high"></i> <span>Mute</span></button>
+          <button class="nav-close-btn" id="closeNavModalBtn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+
+      <div class="nav-progress-wrapper">
+        <div class="nav-progress-bar-track">
+          <div class="nav-progress-bar-fill" id="navProgressBar"></div>
+        </div>
+        <div class="nav-progress-dots" id="navProgressDots"></div>
+      </div>
+
+      <div class="nav-main-viewport">
+        <div class="nav-image-stage">
+          <img src="" alt="Navigation Step" id="navMainImage" class="nav-main-image" />
+          <div class="nav-image-spinner" id="navImageSpinner"></div>
+        </div>
+        <div class="nav-instruction-panel">
+          <div class="nav-instruction-top">
+            <h3 class="nav-step-title" id="navStepTitle">Step Title</h3>
+            <div class="nav-landmarks-list" id="navLandmarksList"></div>
+
+            <div class="voice-instruction-card">
+              <div class="voice-status-header">
+                <span class="voice-status-label"><i class="fa-solid fa-volume-high"></i> Voice Instruction</span>
+                <div class="voice-soundwave" id="navVoiceWave">
+                  <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                </div>
+              </div>
+              <p class="nav-instruction-text" id="navInstructionText"></p>
+            </div>
+
+            <div class="voice-audio-controls-row">
+              <button class="audio-ctrl-btn" id="navPlayVoiceBtn"><i class="fa-solid fa-play"></i> <span>Play</span></button>
+              <button class="audio-ctrl-btn" id="navPauseVoiceBtn" style="display: none;"><i class="fa-solid fa-pause"></i> <span>Pause</span></button>
+              <button class="audio-ctrl-btn" id="navRestartVoiceBtn"><i class="fa-solid fa-rotate-left"></i> <span>Restart</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-stage-footer">
+        <button class="nav-btn-prev" id="navPrevBtn"><i class="fa-solid fa-arrow-left"></i> <span>Previous</span></button>
+        <button class="nav-btn-next" id="navNextBtn"><span>Next</span> <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <div class="nav-completion-overlay" id="navCompletionOverlay">
+        <div class="completion-card-inner">
+          <div class="completion-trophy-circle"><i class="fa-solid fa-flag-checkered"></i></div>
+          <h2 class="completion-heading">Navigation Preview Complete!</h2>
+          <p class="completion-subheading">You have reached the destination.</p>
+          <div class="destination-info-pill">
+            <span class="destination-name">Department Name</span>
+            <span class="destination-location">Building &amp; Floor</span>
+          </div>
+          <div class="completion-actions-row">
+            <button class="btn-restart-nav" id="navCompletionRestartBtn"><i class="fa-solid fa-rotate-left"></i> <span>Restart</span></button>
+            <button class="btn-close-nav" id="navCompletionCloseBtn"><i class="fa-solid fa-circle-check"></i> <span>Close</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Controller Script -->
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>
